@@ -28,7 +28,7 @@ plt.savefig('./figures_png/'+product_id+'_bar.png')
 plt.close()
 
 #udział poszczególnych rekomendacji w ogólnej liczbie opinii
-recommendation = opinions['recommendation'].value_counts
+recommendation = opinions['recommendation'].value_counts()
 recommendation.plot.pie(label='', autopct='%.1f%%', colors=['mediumseagreen', 'coral'])
 ax.set_title('Udział poszczególnych rekomendacji w ogólnej liczbie opinii')
 plt.savefig('./figures_png/'+product_id+'_pie.png')
