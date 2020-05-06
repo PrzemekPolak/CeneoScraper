@@ -1,5 +1,5 @@
 from app import app
-from flask import render_template, request
+from flask import render_template, request, url_for
 from flaskext.markdown import Markdown
 from app.forms import ProductForm
 Markdown(app)
@@ -20,11 +20,15 @@ def about():
 
 @app.route('/extract', methods=['POST', 'GET'])
 def extract():
-    if request.method == 'POST':
-        return 'success'
     form = ProductForm()
+    if form.validate_on_submit():
+        product_id = form.product_id.data
+        return redirect(url_for('product', id=product_id))
     return render_template('extract.html', form=form)
 
+@app.route('/product/<int:id>')
+def product(id):
+    pass
 
 @app.route('/products')
 def products():

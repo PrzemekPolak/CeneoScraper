@@ -14,25 +14,6 @@ def extract_feature(opinion, tag, tag_class, child=None):
     except AttributeError:
         return None
 
-tags = {
-    "author": ["div",  "reviewer-name-line"],
-    "recommendation": ["div", "product-review-summary", 'em'],
-    "stars": ['span', 'review-score-count'],
-    "purchased": ['div','product-review-pz', 'em'],
-    "useful": ['button', 'vote-yes', 'span'],
-    "useless": ['button', 'vote-no', 'span'],
-    "content": ['p', 'product-review-body'],
-    "pros": ['div', 'pros-cell', 'ul'],
-    "cons": ['div', 'cons-cell', 'ul']
-}
-
-#funkcja do usuwania znaków formatujących
-def remove_whitespaces(string):
-    try:
-        return string.replace("\n", ", ").replace("\r", ", ")
-    except AttributeError:
-        pass
-
 #adres URL przykładowej strony z opiniami
 url_prefix = "https://www.ceneo.pl"
 product_id = input("Podaj kod produktu: ")
