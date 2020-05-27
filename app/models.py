@@ -3,6 +3,8 @@ import requests
 from bs4 import BeautifulSoup
 import textwrap
 import json
+#from app import app
+#from app.utils import extract_element, remove_whitespaces
 from utils import extract_element, remove_whitespaces
 
 class Product:
@@ -13,8 +15,12 @@ class Product:
     
     def __str__(self):
         return f'Product_id: {self.product_id}\nName: {self.name}\nOpinions:\n'+'\n'.join(textwrap.indent(str(opinion), '   ') for opinion in self.opinions)
-    def __repr__(self):
-        pass
+    def __dict__(self):
+        return {
+            "product_id": self.product_id,
+            "name": self.name,
+            "opinions": [opinion.__dict__() for opinion in self.opinions]
+        }
     def extract_product(self):
         url_prefix = "https://www.ceneo.pl"
         url_postfix = "#tab=reviews"
@@ -47,8 +53,18 @@ class Product:
                 except TypeError:
                     url = None
     def save_product(self):
-        with open('./opinions_json/' + product_id + '.json', "w", encoding="utf-8") as fp:
-            json.dump(opinions_list, fp, ensure_ascii=False, indent=4, separators=(',', ': '))
+        with open('app/opinions_json/' + product_id + '.json', "w", encoding="utf-8") as fp:
+            json.dump(self.__dict__(), fp, ensure_ascii=False, indent=4, separators=(',', ': '))
+
+    def read_product(self):
+        with open('app/opinions_json/' + product_id + '.json', "r", encoding="utf-8") as fp:
+            pr = json.load(fp)
+        self.name = pr['name']
+        opinions = pr['opinions']  
+        for opinion in opinions:
+            op = Opinion(**opinion)
+            self.opinions.append(op)
+               
 
 class Opinion:
     #słownik z składowymi opinii
@@ -79,8 +95,16 @@ class Opinion:
         self.review_date = review_date
 
     def __str__(self):
-        return f'Opinion_id: {self.opinion_id}\nAuthor: {self.author}\nStars: {self.stars}\n'
-
+        return '\n'.join(key+': '+('' if getattr(self,key) is None else str(getattr(self,key))) for key in self.__dict__().keys())
+    def __dict__(self):
+        features = {key:('' if getattr(self,key) is None else getattr(self,key))
+                    for key in self.tags.keys()}
+        features['opinion_id'] = self.opinion_id
+        features['pros'] = self.pros
+        features['cons'] = self.cons
+        features['review_date'] = self.review_date
+        features['purchase_date'] = self.purchase_date
+        return features
     def extract_opinion(self, opinion):
         for key, args in self.tags.items():
             setattr(self, key, extract_element(opinion, *args))
