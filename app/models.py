@@ -3,9 +3,9 @@ import requests
 from bs4 import BeautifulSoup
 import textwrap
 import json
-#from app import app
-#from app.utils import extract_element, remove_whitespaces
-from utils import extract_element, remove_whitespaces
+from app import app
+from app.utils import extract_element, remove_whitespaces
+#from utils import extract_element, remove_whitespaces
 
 class Product:
     def __init__(self, product_id = None, name = None, opinions=[] ):
@@ -53,11 +53,11 @@ class Product:
                 except TypeError:
                     url = None
     def save_product(self):
-        with open('app/opinions_json/' + product_id + '.json', "w", encoding="utf-8") as fp:
+        with open('app/opinions_json/' + self.product_id + '.json', "w", encoding="utf-8") as fp:
             json.dump(self.__dict__(), fp, ensure_ascii=False, indent=4, separators=(',', ': '))
 
     def read_product(self):
-        with open('app/opinions_json/' + product_id + '.json', "r", encoding="utf-8") as fp:
+        with open('app/opinions_json/' + self.product_id + '.json', "r", encoding="utf-8") as fp:
             pr = json.load(fp)
         self.name = pr['name']
         opinions = pr['opinions']  
@@ -80,7 +80,7 @@ class Opinion:
 
     #definicja konstruktora klasy
     def __init__(self, opinion_id=None, author=None, recommendation=None, stars=None, content=None, pros=None, cons=None,
-                useful=None, useless=None, purchased=None, purchased_date=None, review_date=None):
+                useful=None, useless=None, purchased=None, purchase_date=None, review_date=None):
         self.opinion_id = opinion_id
         self.author = author
         self.recommendation = recommendation
@@ -91,7 +91,7 @@ class Opinion:
         self.useful = useful
         self.useless = useless
         self.purchased = purchased
-        self.purchased_date = purchased_date
+        self.purchase_date = purchase_date
         self.review_date = review_date
 
     def __str__(self):

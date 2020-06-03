@@ -19,10 +19,10 @@
 
         <nav class="container navbar navbar-expand-lg navbar-dark bg-dark sticky-top rounded">
             <div class="">
-                <a class="navbar-brand" href="./"> Strona główna</a>
-                <a class="navbar-brand" href="./extract"> Ekstrakcja opinii</a>
-                <a class="navbar-brand" href="./products"> Lista produktów</a>
-                <a class="navbar-brand" href="./about"> O projekcie</a>
+                <a class="navbar-brand" href="{{ url_for('index') }}"> Strona główna</a>
+                <a class="navbar-brand" href="{{ url_for('extract') }}"> Ekstrakcja opinii</a>
+                <a class="navbar-brand" href="{{ url_for('products') }}"> Lista produktów</a>
+                <a class="navbar-brand" href="{{ url_for('about') }}"> O projekcie</a>
             </div>
         </nav>
 

@@ -1,10 +1,11 @@
 from app import app
-from flask import render_template, request, url_for
+from flask import render_template, request, redirect, url_for
 from flaskext.markdown import Markdown
 from app.forms import ProductForm
 import requests
 from app.models import Opinion, Product
 import pandas as pd
+import os
 Markdown(app)
 
 app.config['SECRET_KEY'] = 'tajny'
@@ -43,7 +44,7 @@ def product(id):
     opinions = pd.DataFrame.from_records([opinion.__dict__() for opinion in product.opinions])
     opinions['stars'] = opinions['stars'].map(lambda x: float(x.split('/')[0].replace(',', '.')))
     return render_template(
-        'product.html'
+        'product.html',
         tables = [
             opinions.to_html(
                 classes= 'table table-bordered table-sm table-responsive',
@@ -54,9 +55,8 @@ def product(id):
         titles = opinions.columns.values
     )
 
-    # opinions = pd.read_json('app/opinions_json/' + id + '.json')
-    # opinions = opinions.set_index('opinion_id')
-
 @app.route('/products')
 def products():
-    pass
+    products = os.listdir('app/opinions_json')
+    products = [product.replace('.json', '') for product in products]
+    return render_template('products.html', products=products)
